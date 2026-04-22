@@ -1,95 +1,118 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0a0a0a;
-  --foreground: #ededed;
-  --neon-cyan: #00f0ff;
-  --neon-magenta: #ff00ff;
-  --neon-green: #39ff14;
-  --neon-yellow: #ffff00;
-  --neon-red: #ff0040;
+  --background: #0B1121;
+  --foreground: #FFFFFF;
+  --surface: #0F1D33;
+  --surface-light: #1A2B47;
+  --border: #1E3A5F;
+  --accent-red: #E31837;
+  --accent-blue: #0066CC;
+  --accent-cyan: #00B4D8;
+  --accent-green: #00C853;
+  --accent-yellow: #FFB800;
+  --text-muted: #94A3B8;
+  --font-display: var(--font-oswald);
+  --font-body: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-body);
+  --font-mono: var(--font-mono);
 }
 
 /* Custom scrollbar */
 .custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
+  width: 4px;
 }
-
 .custom-scrollbar::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 0.05);
-  border-radius: 3px;
 }
-
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(0, 240, 255, 0.3);
-  border-radius: 3px;
+  background: var(--accent-blue);
+  border-radius: 2px;
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 240, 255, 0.5);
+/* Broadcast animations */
+@keyframes slide-in-right {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
 }
 
-/* Animations */
-@keyframes pulse-glow {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 40px rgba(0, 240, 255, 0.5);
-  }
+@keyframes slide-up {
+  from { transform: translateY(40px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
+@keyframes wipe-in {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
 }
 
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  75% { transform: translateX(5px); }
+@keyframes pulse-red {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(227, 24, 55, 0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(227, 24, 55, 0); }
 }
 
-.animate-pulse-glow {
-  animation: pulse-glow 2s ease-in-out infinite;
+@keyframes count-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.animate-float {
-  animation: float 3s ease-in-out infinite;
+.animate-slide-in-right {
+  animation: slide-in-right 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.animate-shake {
-  animation: shake 0.3s ease-in-out;
+.animate-slide-up {
+  animation: slide-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Neon text utility */
-.neon-text-cyan {
-  color: #00f0ff;
-  text-shadow: 0 0 10px rgba(0, 240, 255, 0.5), 0 0 20px rgba(0, 240, 255, 0.3);
-}
-
-.neon-text-magenta {
-  color: #ff00ff;
-  text-shadow: 0 0 10px rgba(255, 0, 255, 0.5), 0 0 20px rgba(255, 0, 255, 0.3);
-}
-
-.neon-text-green {
-  color: #39ff14;
-  text-shadow: 0 0 10px rgba(57, 255, 20, 0.5), 0 0 20px rgba(57, 255, 20, 0.3);
+.animate-wipe-in {
+  animation: wipe-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
+  font-family: var(--font-body), system-ui, sans-serif;
+}
+
+/* Score bug styling */
+.score-bug {
+  background: linear-gradient(135deg, #0F1D33 0%, #1A2B47 100%);
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Lower third styling */
+.lower-third {
+  background: linear-gradient(90deg, rgba(227, 24, 55, 0.9) 0%, rgba(227, 24, 55, 0.7) 100%);
+  backdrop-filter: blur(8px);
+}
+
+/* Stat card styling */
+.stat-card {
+  background: linear-gradient(145deg, rgba(15, 29, 51, 0.9), rgba(26, 43, 71, 0.6));
+  border: 1px solid rgba(30, 58, 95, 0.6);
+  transition: all 0.15s ease;
+}
+
+.stat-card:hover {
+  border-color: var(--accent-cyan);
+  background: linear-gradient(145deg, rgba(15, 29, 51, 1), rgba(26, 43, 71, 0.8));
+}
+
+/* Correct answer broadcast flash */
+.broadcast-correct {
+  background: linear-gradient(145deg, rgba(0, 200, 83, 0.2), rgba(0, 200, 83, 0.05));
+  border-color: var(--accent-green);
+}
+
+/* Wrong answer broadcast flash */
+.broadcast-wrong {
+  background: linear-gradient(145deg, rgba(227, 24, 55, 0.2), rgba(227, 24, 55, 0.05));
+  border-color: var(--accent-red);
 }

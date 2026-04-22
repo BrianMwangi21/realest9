@@ -1,6 +1,6 @@
 /**
- * Timer Component
- * Animated countdown timer with neon styling
+ * Timer — Shot Clock Style
+ * ESPN broadcast countdown
  */
 
 'use client';
@@ -20,57 +20,64 @@ export default function Timer({ timeRemaining, totalTime, status }: TimerProps) 
   const isCritical = timeRemaining <= 5;
 
   useEffect(() => {
-    if (isLow && status === 'playing') {
+    if (isLow && (status === 'playing' || status === 'answered')) {
       setPulse(true);
-      const timeout = setTimeout(() => setPulse(false), 200);
+      const timeout = setTimeout(() => setPulse(false), 300);
       return () => clearTimeout(timeout);
     }
   }, [timeRemaining, isLow, status]);
 
   const getColor = () => {
-    if (isCritical) return '#ff0040';
-    if (isLow) return '#ffff00';
-    return '#00f0ff';
+    if (isCritical) return '#FF1744';
+    if (isLow) return '#FFB800';
+    return '#00B4D8';
   };
 
   const color = getColor();
 
   return (
-    <div className="w-full max-w-md">
-      {/* Time display */}
-      <div className="flex justify-between items-end mb-2">
-        <span className="text-xs text-gray-500 font-mono uppercase">Total Time Left</span>
-        <span 
-          className={`text-3xl font-black font-mono transition-all duration-300 ${pulse ? 'scale-110' : ''}`}
-          style={{ 
-            color,
-            textShadow: `0 0 20px ${color}80`,
-          }}
-        >
-          {timeRemaining}s
-        </span>
-      </div>
+    <div className="flex items-center gap-3">
+      {/* Label */}
+      <span className="hidden sm:block text-[10px] text-[#64748B] font-[var(--font-oswald)] uppercase tracking-wider">
+        Clock
+      </span>
 
-      {/* Progress bar */}
-      <div className="relative h-3 bg-gray-800 rounded-full overflow-hidden">
-        <div 
-          className="absolute inset-y-0 left-0 rounded-full transition-all duration-1000 ease-linear"
-          style={{ 
-            width: `${percentage}%`,
-            background: `linear-gradient(90deg, ${color}40, ${color})`,
-            boxShadow: `0 0 10px ${color}60`,
-          }}
-        />
-        {/* Glow effect */}
-        <div 
-          className="absolute inset-y-0 rounded-full"
-          style={{ 
-            left: `${percentage}%`,
-            width: '2px',
-            background: color,
-            boxShadow: `0 0 10px ${color}, 0 0 20px ${color}`,
-          }}
-        />
+      {/* Shot clock circle */}
+      <div className="relative">
+        <svg className="w-14 h-14 -rotate-90" viewBox="0 0 56 56">
+          {/* Background circle */}
+          <circle
+            cx="28"
+            cy="28"
+            r="24"
+            fill="none"
+            stroke="rgba(255,255,255,0.1)"
+            strokeWidth="3"
+          />
+          {/* Progress circle */}
+          <circle
+            cx="28"
+            cy="28"
+            r="24"
+            fill="none"
+            stroke={color}
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeDasharray={`${2 * Math.PI * 24}`}
+            strokeDashoffset={`${2 * Math.PI * 24 * (1 - percentage / 100)}`}
+            style={{ transition: 'stroke-dashoffset 1s linear, stroke 0.3s ease' }}
+          />
+        </svg>
+
+        {/* Number */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span 
+            className={`font-[var(--font-oswald)] text-xl font-bold tabular-nums ${pulse ? 'scale-110' : ''} transition-transform`}
+            style={{ color }}
+          >
+            {timeRemaining}
+          </span>
+        </div>
       </div>
     </div>
   );
